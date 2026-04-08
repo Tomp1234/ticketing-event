@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Milo - Ticketing Business Forum 2026</title>
+<style>
+  @page { size: A4 portrait; margin: 0; }
+  @media print {
+    html, body { width: 210mm; height: 297mm; margin: 0; padding: 0;
+      -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 794px; height: 1123px; overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+
+  .page {
+    width: 794px; height: 1123px; background: #0B0F1E;
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+  }
+
+  /* Subtle dot grid */
+  .page::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(255,140,50,0.07) 1px, transparent 1px);
+    background-size: 24px 24px; opacity: 0.5; z-index: 0;
+  }
+
+  /* Gradient orbs */
+  .orb-1 {
+    position: absolute; top: -80px; right: -60px; width: 420px; height: 420px;
+    background: radial-gradient(circle, rgba(255,140,50,0.18) 0%, rgba(255,90,60,0.06) 50%, transparent 70%);
+    filter: blur(40px); z-index: 0; border-radius: 50%;
+  }
+  .orb-2 {
+    position: absolute; bottom: 80px; left: -120px; width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(255,140,50,0.12) 0%, transparent 60%);
+    filter: blur(50px); z-index: 0; border-radius: 50%;
+  }
+
+  /* ========================================
+     TICKETING DESIGN ELEMENTS
+     ======================================== */
+
+  /* Large ghost ticket — top right area */
+  .ghost-ticket {
+    position: absolute; z-index: 1;
+    top: 60px; right: -30px;
+    width: 280px; height: 110px;
+    border: 2px solid rgba(255,140,50,0.12);
+    border-radius: 8px;
+    transform: rotate(-8deg);
+    overflow: visible;
+  }
+  .ghost-ticket::before {
+    content: ''; position: absolute;
+    left: 70px; top: -1px; bottom: -1px; width: 0;
+    border-left: 2px dashed rgba(255,140,50,0.15);
+  }
+  /* Stub lines inside ticket */
+  .ghost-ticket .gt-line {
+    position: absolute; left: 84px; height: 3px;
+    background: rgba(255,140,50,0.10); border-radius: 2px;
+  }
+  .ghost-ticket .gt-line:nth-child(1) { top: 18px; width: 120px; }
+  .ghost-ticket .gt-line:nth-child(2) { top: 30px; width: 80px; }
+  .ghost-ticket .gt-line:nth-child(3) { top: 42px; width: 100px; }
+  /* Barcode inside stub */
+  .ghost-ticket .gt-barcode {
+    position: absolute; left: 16px; top: 16px;
+    display: flex; gap: 2px; align-items: flex-end;
+  }
+  .ghost-ticket .gt-barcode .b {
+    width: 3px; background: rgba(255,140,50,0.12); border-radius: 1px;
+  }
+  /* Notches on the tear line */
+  .ghost-ticket .gt-notch-top, .ghost-ticket .gt-notch-bot {
+    position: absolute; left: 63px; width: 14px; height: 14px;
+    border-radius: 50%; background: #0B0F1E;
+    border: 2px solid rgba(255,140,50,0.12);
+  }
+  .ghost-ticket .gt-notch-top { top: -8px; }
+  .ghost-ticket .gt-notch-bot { bottom: -8px; }
+
+  /* Second smaller ghost ticket — bottom left */
+  .ghost-ticket-2 {
+    position: absolute; z-index: 1;
+    bottom: 180px; left: -40px;
+    width: 200px; height: 80px;
+    border: 1.5px solid rgba(255,140,50,0.09);
+    border-radius: 6px;
+    transform: rotate(12deg);
+  }
+  .ghost-ticket-2::before {
+    content: ''; position: absolute;
+    left: 52px; top: -1px; bottom: -1px; width: 0;
+    border-left: 2px dashed rgba(255,140,50,0.10);
+  }
+
+  /* Left-edge perforation strip — visible tear line */
+  .perf-strip {
+    position: absolute; left: 28px; top: 0; bottom: 0; width: 0; z-index: 1;
+    border-left: 2px dashed rgba(255,140,50,0.10);
+  }
+  .perf-notch {
+    position: absolute; left: 20px; width: 16px; height: 16px; z-index: 1;
+    border-radius: 50%; background: rgba(255,140,50,0.04);
+    border: 1.5px solid rgba(255,140,50,0.10);
+  }
+
+  /* Big barcode decoration — right edge, behind mockup */
+  .barcode-big {
+    position: absolute; z-index: 1; right: 20px; top: 320px;
+    display: flex; gap: 3px; align-items: flex-end; opacity: 0.08;
+    transform: rotate(90deg);
+    transform-origin: right top;
+  }
+  .barcode-big .bar {
+    background: rgba(255,180,80,1); border-radius: 1px;
+  }
+
+  /* "ADMIT ONE" watermark text */
+  .admit-text {
+    position: absolute; z-index: 1;
+    font-size: 130px; font-weight: 900; letter-spacing: 12px;
+    color: rgba(255,140,50,0.025);
+    transform: rotate(-30deg);
+    top: 400px; left: -80px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Horizontal ticket tear across full width — between mockup and proof */
+  .ticket-tear {
+    position: relative; z-index: 3;
+    margin: 0; height: 0;
+    border-top: 2px dashed rgba(255,140,50,0.12);
+  }
+  .ticket-tear::before, .ticket-tear::after {
+    content: ''; position: absolute; top: -10px;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: #0B0F1E;
+    border: 2px solid rgba(255,140,50,0.12);
+  }
+  .ticket-tear::before { left: -10px; }
+  .ticket-tear::after { right: -10px; }
+
+  /* Seat/row label decoration */
+  .seat-label {
+    position: absolute; z-index: 1; right: 52px; bottom: 115px;
+    display: flex; gap: 24px; opacity: 0.07;
+  }
+  .seat-label-item {
+    display: flex; flex-direction: column; align-items: center;
+  }
+  .seat-label-item .sl-label {
+    font-size: 8px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: rgba(255,160,80,1);
+  }
+  .seat-label-item .sl-value {
+    font-size: 22px; font-weight: 800; color: rgba(255,160,80,1);
+    letter-spacing: -1px;
+  }
+
+  .page > .header, .page > .header-rule, .page > .headline,
+  .page > .sub-headline, .page > .mockup-section,
+  .page > .proof-points, .page > .ticket-tear-wrap,
+  .page > .cta-bar { position: relative; z-index: 3; }
+
+  /* ===== HEADER ===== */
+  .header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 32px 44px 20px 52px;
+  }
+  .header-left { display: flex; align-items: center; gap: 14px; }
+  .header-left img.icon { height: 44px; width: auto; }
+  .wordmark { display: flex; flex-direction: column; }
+  .milo-text {
+    font-size: 34px; font-weight: 800; color: #F0F4FF;
+    letter-spacing: -0.5px; line-height: 1;
+  }
+  .by-am {
+    font-size: 9.5px; font-weight: 500; color: rgba(240,244,255,0.35);
+    letter-spacing: 2px; text-transform: uppercase; margin-top: 3px;
+  }
+  .header-right {
+    font-size: 12px; font-weight: 500; color: rgba(240,244,255,0.45);
+    text-align: right; letter-spacing: 0.5px; line-height: 1.5;
+  }
+  .header-right .event-tag {
+    display: inline-block; font-size: 10px; font-weight: 600;
+    color: rgba(255,160,70,0.9); letter-spacing: 1.5px; text-transform: uppercase;
+    border: 1px solid rgba(255,140,50,0.25); border-radius: 3px;
+    padding: 2px 8px; margin-bottom: 4px;
+  }
+  .header-rule {
+    height: 1px; margin: 0 52px;
+    background: linear-gradient(90deg, #FF8C32 0%, #FF5A3C 40%, transparent 85%);
+    opacity: 0.35;
+  }
+
+  /* ===== HEADLINE ===== */
+  .headline { padding: 48px 52px 0 52px; }
+  .headline h1 {
+    font-size: 46px; font-weight: 800; line-height: 1.12;
+    letter-spacing: -1.5px; color: #F0F4FF; max-width: 640px;
+  }
+  .gradient-text {
+    background: linear-gradient(135deg, #FF8C32 20%, #FF5A3C 80%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ===== SUB-HEADLINE ===== */
+  .sub-headline { padding: 18px 52px 0 52px; }
+  .sub-headline p {
+    font-size: 17px; font-weight: 400; color: rgba(240,244,255,0.5);
+    line-height: 1.55; max-width: 520px; letter-spacing: 0.1px;
+  }
+
+  /* ===== MOCKUP ===== */
+  .mockup-section {
+    flex: 1; position: relative; display: flex; align-items: center;
+    justify-content: center; padding: 28px 0 12px 0; min-height: 0;
+  }
+  .mockup-glow {
+    position: absolute; width: 75%; height: 85%;
+    background: radial-gradient(ellipse at 55% 50%, rgba(255,140,50,0.18) 0%, rgba(255,90,60,0.06) 45%, transparent 70%);
+    filter: blur(45px); z-index: 0;
+  }
+  .mockup-container {
+    position: relative; z-index: 1; width: 94%; max-width: 740px;
+    overflow: hidden; border-radius: 6px;
+    margin-left: 20px;
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 85%, transparent 100%),
+                        linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+  .mockup-container img { width: 100%; height: auto; display: block; }
+
+  /* ===== PROOF POINTS ===== */
+  .proof-points {
+    display: flex; justify-content: flex-start; align-items: center;
+    padding: 20px 52px 18px 52px; gap: 0;
+  }
+  .proof-item {
+    flex: 1; display: flex; align-items: center; gap: 10px; padding: 0 18px;
+  }
+  .proof-item:first-child { padding-left: 0; }
+  .proof-item:not(:last-child) { border-right: 1px solid rgba(255,140,50,0.15); }
+  .proof-icon { font-size: 16px; color: #FF8C32; flex-shrink: 0; }
+  .proof-icon-svg { flex-shrink: 0; }
+  .proof-text { font-size: 12px; font-weight: 400; color: rgba(240,244,255,0.6); line-height: 1.35; }
+  .proof-text strong { color: rgba(240,244,255,0.9); font-weight: 600; }
+
+  /* ===== TICKET-STRIP DIVIDER ===== */
+  .ticket-strip-wrap {
+    position: relative; z-index: 3; margin: 0;
+  }
+  .ticket-strip {
+    margin: 0; height: 0;
+    border-top: 2px dashed rgba(255,140,50,0.15);
+    position: relative;
+  }
+  .ticket-strip::before, .ticket-strip::after {
+    content: ''; position: absolute; top: -11px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: #0B0F1E;
+    border: 2px solid rgba(255,140,50,0.12);
+  }
+  .ticket-strip::before { left: -11px; }
+  .ticket-strip::after { right: -11px; }
+
+  /* ===== CTA BAR ===== */
+  .cta-bar {
+    background: linear-gradient(90deg, rgba(255,140,50,0.06) 0%, rgba(255,90,60,0.04) 100%);
+    border-top: 1px solid rgba(255,140,50,0.08);
+    padding: 20px 52px 24px 52px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cta-left { display: flex; flex-direction: column; gap: 3px; }
+  .cta-stand {
+    font-size: 19px; font-weight: 700; color: #F0F4FF; letter-spacing: -0.3px;
+  }
+  .stand-num {
+    background: linear-gradient(135deg, #FF8C32, #FF5A3C);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .cta-event-info {
+    font-size: 12px; font-weight: 400; color: rgba(240,244,255,0.40);
+    letter-spacing: 0.3px;
+  }
+  .cta-url {
+    font-size: 13px; font-weight: 400; color: rgba(240,244,255,0.35);
+    letter-spacing: 0.3px;
+  }
+  .cta-right { display: flex; align-items: center; gap: 14px; }
+  .cta-scan-text {
+    font-size: 11.5px; color: rgba(240,244,255,0.4); font-weight: 400;
+    text-align: right; line-height: 1.4;
+  }
+  .qr-wrap {
+    background: #F0F4FF; border-radius: 5px; padding: 5px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .qr-wrap svg { display: block; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="orb-1"></div>
+  <div class="orb-2"></div>
+
+  <!-- ===== TICKETING DESIGN ELEMENTS ===== -->
+
+  <!-- Large ghost ticket shape — top right -->
+  <div class="ghost-ticket">
+    <div class="gt-notch-top"></div>
+    <div class="gt-notch-bot"></div>
+    <div class="gt-line"></div>
+    <div class="gt-line"></div>
+    <div class="gt-line"></div>
+    <div class="gt-barcode">
+      <div class="b" style="height:36px;width:3px"></div>
+      <div class="b" style="height:40px;width:2px"></div>
+      <div class="b" style="height:30px;width:3px"></div>
+      <div class="b" style="height:40px;width:2px"></div>
+      <div class="b" style="height:26px;width:3px"></div>
+      <div class="b" style="height:40px;width:2px"></div>
+      <div class="b" style="height:34px;width:3px"></div>
+      <div class="b" style="height:20px;width:2px"></div>
+      <div class="b" style="height:40px;width:3px"></div>
+      <div class="b" style="height:28px;width:2px"></div>
+      <div class="b" style="height:40px;width:3px"></div>
+      <div class="b" style="height:34px;width:2px"></div>
+    </div>
+  </div>
+
+  <!-- Smaller ghost ticket — bottom left -->
+  <div class="ghost-ticket-2"></div>
+
+  <!-- Left perforation strip -->
+  <div class="perf-strip"></div>
+  <div class="perf-notch" style="top:140px"></div>
+  <div class="perf-notch" style="top:200px"></div>
+  <div class="perf-notch" style="top:260px"></div>
+  <div class="perf-notch" style="top:320px"></div>
+  <div class="perf-notch" style="top:380px"></div>
+  <div class="perf-notch" style="top:440px"></div>
+  <div class="perf-notch" style="top:500px"></div>
+  <div class="perf-notch" style="top:560px"></div>
+  <div class="perf-notch" style="top:620px"></div>
+  <div class="perf-notch" style="top:680px"></div>
+  <div class="perf-notch" style="top:740px"></div>
+  <div class="perf-notch" style="top:800px"></div>
+  <div class="perf-notch" style="top:860px"></div>
+  <div class="perf-notch" style="top:920px"></div>
+
+  <!-- Big vertical barcode — right edge -->
+  <div class="barcode-big">
+    <div class="bar" style="height:60px;width:4px"></div>
+    <div class="bar" style="height:60px;width:2px"></div>
+    <div class="bar" style="height:60px;width:4px"></div>
+    <div class="bar" style="height:60px;width:3px"></div>
+    <div class="bar" style="height:60px;width:2px"></div>
+    <div class="bar" style="height:60px;width:4px"></div>
+    <div class="bar" style="height:60px;width:2px"></div>
+    <div class="bar" style="height:60px;width:3px"></div>
+    <div class="bar" style="height:60px;width:4px"></div>
+    <div class="bar" style="height:60px;width:2px"></div>
+    <div class="bar" style="height:60px;width:2px"></div>
+    <div class="bar" style="height:60px;width:4px"></div>
+    <div class="bar" style="height:60px;width:3px"></div>
+    <div class="bar" style="height:60px;width:2px"></div>
+    <div class="bar" style="height:60px;width:4px"></div>
+    <div class="bar" style="height:60px;width:2px"></div>
+    <div class="bar" style="height:60px;width:3px"></div>
+    <div class="bar" style="height:60px;width:4px"></div>
+    <div class="bar" style="height:60px;width:2px"></div>
+    <div class="bar" style="height:60px;width:4px"></div>
+    <div class="bar" style="height:60px;width:3px"></div>
+    <div class="bar" style="height:60px;width:2px"></div>
+    <div class="bar" style="height:60px;width:4px"></div>
+    <div class="bar" style="height:60px;width:2px"></div>
+    <div class="bar" style="height:60px;width:3px"></div>
+    <div class="bar" style="height:60px;width:4px"></div>
+    <div class="bar" style="height:60px;width:2px"></div>
+    <div class="bar" style="height:60px;width:4px"></div>
+  </div>
+
+  <!-- "ADMIT ONE" watermark -->
+  <div class="admit-text">ADMIT ONE</div>
+
+  <!-- Seat / Row label decoration -->
+  <div class="seat-label">
+    <div class="seat-label-item">
+      <span class="sl-label">ROW</span>
+      <span class="sl-value">A</span>
+    </div>
+    <div class="seat-label-item">
+      <span class="sl-label">SEAT</span>
+      <span class="sl-value">14</span>
+    </div>
+    <div class="seat-label-item">
+      <span class="sl-label">GATE</span>
+      <span class="sl-value">3</span>
+    </div>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <img src="vector-logo.png" alt="Milo" class="icon">
+      <div class="wordmark">
+        <span class="milo-text">Milo</span>
+        <span class="by-am">by Autonomous Minds</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="event-tag">#TBF26</span><br>
+      Ticketing Business Forum<br>
+      27 &ndash; 29 April &middot; Manchester
+    </div>
+  </div>
+  <div class="header-rule"></div>
+
+  <!-- HEADLINE -->
+  <div class="headline">
+    <h1>
+      Your boss just asked why ticket sales spiked&nbsp;last&nbsp;Thursday.<br>
+      <span class="gradient-text">Hope you didn&rsquo;t have plans this&nbsp;afternoon.</span>
+    </h1>
+  </div>
+
+  <!-- SUB-HEADLINE -->
+  <div class="sub-headline">
+    <p>Hundreds of venue reports. Dozens of formats. One person who knows how it all fits&nbsp;together. Ask Milo instead &mdash; answers in seconds, not&nbsp;spreadsheets.</p>
+  </div>
+
+  <!-- APP MOCKUP -->
+  <div class="mockup-section">
+    <div class="mockup-glow"></div>
+    <div class="mockup-container">
+      <img src="app-mockup.png" alt="Milo AI business intelligence dashboard">
+    </div>
+  </div>
+
+  <!-- PROOF POINTS -->
+  <div class="proof-points">
+    <div class="proof-item">
+      <span class="proof-icon">&#10022;</span>
+      <span class="proof-text"><strong>Answers in seconds</strong> &mdash; not pivot tables</span>
+    </div>
+    <div class="proof-item">
+      <svg class="proof-icon-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF8C32" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      <span class="proof-text"><strong>EU-hosted &amp; ISO 27001</strong> &mdash; your data stays yours</span>
+    </div>
+    <div class="proof-item">
+      <span class="proof-icon">&#8734;</span>
+      <span class="proof-text"><strong>Unlimited users</strong> &mdash; one flat monthly fee</span>
+    </div>
+  </div>
+
+  <!-- Ticket-strip tear divider -->
+  <div class="ticket-strip-wrap">
+    <div class="ticket-strip"></div>
+  </div>
+
+  <!-- CTA BAR -->
+  <div class="cta-bar">
+    <div class="cta-left">
+      <span class="cta-stand">Come see us at Stand <span class="stand-num">131</span></span>
+      <span class="cta-event-info">Emirates Old Trafford, Manchester</span>
+      <span class="cta-url">milo.ai</span>
+    </div>
+    <div class="cta-right">
+      <span class="cta-scan-text">Scan to see<br>Milo in action</span>
+      <div class="qr-wrap">
+        <svg width="56" height="56" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><path d="M0,0H1V1H0zM1,0H2V1H1zM2,0H3V1H2zM3,0H4V1H3zM4,0H5V1H4zM5,0H6V1H5zM6,0H7V1H6zM8,0H9V1H8zM9,0H10V1H9zM10,0H11V1H10zM11,0H12V1H11zM15,0H16V1H15zM16,0H17V1H16zM18,0H19V1H18zM19,0H20V1H19zM20,0H21V1H20zM21,0H22V1H21zM22,0H23V1H22zM23,0H24V1H23zM24,0H25V1H24zM0,1H1V2H0zM6,1H7V2H6zM9,1H10V2H9zM10,1H11V2H10zM11,1H12V2H11zM13,1H14V2H13zM14,1H15V2H14zM16,1H17V2H16zM18,1H19V2H18zM24,1H25V2H24zM0,2H1V3H0zM2,2H3V3H2zM3,2H4V3H3zM4,2H5V3H4zM6,2H7V3H6zM8,2H9V3H8zM9,2H10V3H9zM10,2H11V3H10zM14,2H15V3H14zM15,2H16V3H15zM16,2H17V3H16zM18,2H19V3H18zM20,2H21V3H20zM21,2H22V3H21zM22,2H23V3H22zM24,2H25V3H24zM0,3H1V4H0zM2,3H3V4H2zM3,3H4V4H3zM4,3H5V4H4zM6,3H7V4H6zM9,3H10V4H9zM10,3H11V4H10zM12,3H13V4H12zM14,3H15V4H14zM18,3H19V4H18zM20,3H21V4H20zM21,3H22V4H21zM22,3H23V4H22zM24,3H25V4H24zM0,4H1V5H0zM2,4H3V5H2zM3,4H4V5H3zM4,4H5V5H4zM6,4H7V5H6zM10,4H11V5H10zM13,4H14V5H13zM14,4H15V5H14zM15,4H16V5H15zM18,4H19V5H18zM20,4H21V5H20zM21,4H22V5H21zM22,4H23V5H22zM24,4H25V5H24zM0,5H1V6H0zM6,5H7V6H6zM8,5H9V6H8zM9,5H10V6H9zM11,5H12V6H11zM12,5H13V6H12zM15,5H16V6H15zM18,5H19V6H18zM24,5H25V6H24zM0,6H1V7H0zM1,6H2V7H1zM2,6H3V7H2zM3,6H4V7H3zM4,6H5V7H4zM5,6H6V7H5zM6,6H7V7H6zM8,6H9V7H8zM10,6H11V7H10zM12,6H13V7H12zM14,6H15V7H14zM16,6H17V7H16zM18,6H19V7H18zM19,6H20V7H19zM20,6H21V7H20zM21,6H22V7H21zM22,6H23V7H22zM23,6H24V7H23zM24,6H25V7H24zM12,7H13V8H12zM14,7H15V8H14zM15,7H16V8H15zM16,7H17V8H16zM0,8H1V9H0zM2,8H3V9H2zM6,8H7V9H6zM7,8H8V9H7zM10,8H11V9H10zM13,8H14V9H13zM14,8H15V9H14zM16,8H17V9H16zM19,8H20V9H19zM22,8H23V9H22zM24,8H25V9H24zM0,9H1V10H0zM1,9H2V10H1zM2,9H3V10H2zM3,9H4V10H3zM5,9H6V10H5zM8,9H10V10H8zM10,9H11V10H10zM11,9H12V10H11zM12,9H13V10H12zM13,9H14V10H13zM14,9H15V10H14zM18,9H19V10H18zM19,9H20V10H19zM21,9H22V10H21zM23,9H24V10H23zM24,9H25V10H24zM0,10H1V11H0zM2,10H3V11H2zM5,10H6V11H5zM6,10H7V11H6zM15,10H16V11H15zM17,10H18V11H17zM20,10H21V11H20zM21,10H22V11H21zM22,10H23V11H22zM24,10H25V11H24zM1,11H2V12H1zM2,11H3V12H2zM3,11H4V12H3zM10,11H11V12H10zM11,11H12V12H11zM12,11H13V12H12zM13,11H14V12H13zM17,11H18V12H17zM19,11H20V12H19zM20,11H21V12H20zM21,11H22V12H21zM0,12H1V13H0zM3,12H4V13H3zM5,12H6V13H5zM6,12H7V13H6zM9,12H10V13H9zM10,12H11V13H10zM12,12H13V13H12zM13,12H14V13H13zM16,12H17V13H16zM18,12H19V13H18zM19,12H20V13H19zM24,12H25V13H24zM1,13H2V14H1zM2,13H3V14H2zM3,13H4V14H3zM9,13H10V14H9zM10,13H11V14H10zM12,13H14V14H12zM15,13H16V14H15zM16,13H17V14H16zM18,13H19V14H18zM19,13H20V14H19zM23,13H24V14H23zM24,13H25V14H24zM0,14H1V15H0zM1,14H2V15H1zM2,14H3V15H2zM3,14H4V15H3zM5,14H6V15H5zM6,14H7V15H6zM10,14H11V15H10zM12,14H13V15H12zM13,14H14V15H13zM14,14H15V15H14zM15,14H16V15H15zM21,14H22V15H21zM22,14H23V15H22zM24,14H25V15H24zM2,15H3V16H2zM5,15H6V16H5zM8,15H9V16H8zM9,15H10V16H9zM10,15H11V16H10zM11,15H12V16H11zM12,15H13V16H12zM14,15H16V16H14zM19,15H20V16H19zM20,15H21V16H20zM21,15H22V16H21zM0,16H1V17H0zM1,16H2V17H1zM3,16H4V17H3zM4,16H5V17H4zM5,16H6V17H5zM6,16H7V17H6zM7,16H8V17H7zM9,16H10V17H9zM13,16H14V17H13zM14,16H15V17H14zM15,16H16V17H15zM16,16H17V17H16zM17,16H18V17H17zM18,16H19V17H18zM19,16H20V17H19zM20,16H21V17H20zM23,16H24V17H23zM8,17H9V18H8zM10,17H11V18H10zM13,17H14V18H13zM14,17H15V18H14zM16,17H17V18H16zM20,17H21V18H20zM24,17H25V18H24zM0,18H1V19H0zM1,18H2V19H1zM2,18H3V19H2zM3,18H4V19H3zM4,18H5V19H4zM5,18H6V19H5zM6,18H7V19H6zM8,18H9V19H8zM11,18H12V19H11zM16,18H17V19H16zM18,18H19V19H18zM20,18H21V19H20zM24,18H25V19H24zM0,19H1V20H0zM6,19H7V20H6zM9,19H10V20H9zM13,19H14V20H13zM15,19H16V20H15zM16,19H17V20H16zM20,19H21V20H20zM23,19H24V20H23zM24,19H25V20H24zM0,20H1V21H0zM2,20H3V21H2zM3,20H4V21H3zM4,20H5V21H4zM6,20H7V21H6zM9,20H10V21H9zM10,20H11V21H10zM11,20H12V21H11zM12,20H13V21H12zM13,20H14V21H13zM15,20H16V21H15zM16,20H17V21H16zM17,20H18V21H17zM18,20H19V21H18zM19,20H20V21H19zM20,20H21V21H20zM0,21H1V22H0zM2,21H3V22H2zM3,21H4V22H3zM4,21H5V22H4zM6,21H7V22H6zM9,21H10V22H9zM12,21H13V22H12zM16,21H17V22H16zM17,21H18V22H17zM20,21H21V22H20zM22,21H23V22H22zM0,22H1V23H0zM2,22H3V23H2zM3,22H4V23H3zM4,22H5V23H4zM6,22H7V23H6zM8,22H9V23H8zM9,22H10V23H9zM12,22H13V23H12zM13,22H14V23H13zM14,22H15V23H14zM17,22H18V23H17zM19,22H20V23H19zM20,22H21V23H20zM21,22H22V23H21zM23,22H24V23H23zM24,22H25V23H24zM0,23H1V24H0zM6,23H7V24H6zM9,23H10V24H9zM10,23H11V24H10zM11,23H12V24H11zM12,23H13V24H12zM14,23H15V24H14zM16,23H17V24H16zM17,23H18V24H17zM18,23H19V24H18zM19,23H20V24H19zM20,23H21V24H20zM0,24H1V25H0zM1,24H2V25H1zM2,24H3V25H2zM3,24H4V25H3zM4,24H5V25H4zM5,24H6V25H5zM6,24H7V25H6zM8,24H9V25H8zM9,24H10V25H10zM10,24H11V25H10zM13,24H14V25H13zM14,24H15V25H14zM15,24H16V25H15zM16,24H17V25H16zM21,24H22V25H21zM24,24H25V25H24z" fill="#0B0F1E" fill-rule="nonzero" stroke="none"/></svg>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
